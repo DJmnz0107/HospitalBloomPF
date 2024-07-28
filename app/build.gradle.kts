@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.activity)
     testImplementation(libs.junit)
     implementation("com.oracle.database.jdbc:ojdbc6:11.2.0.4")
+    implementation("com.google.android.material:material:1.8.0")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
