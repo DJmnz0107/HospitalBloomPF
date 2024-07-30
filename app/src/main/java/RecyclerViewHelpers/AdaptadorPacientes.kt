@@ -182,7 +182,7 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
             }
 
             (holder.itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, fragment) // 'fragment_container' es el ID de tu contenedor de fragmentos en el layout
+                .replace(R.id.nav_host_fragment_activity_main, fragment) 
                 .addToBackStack(null)
                 .commit()
         }
