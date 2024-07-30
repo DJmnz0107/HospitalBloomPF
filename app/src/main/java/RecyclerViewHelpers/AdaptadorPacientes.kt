@@ -28,10 +28,10 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
         notifyDataSetChanged()
     }
 
-    fun actualizarListadoPostEdicion(id: Int, nuevoNombre:String, nuevaEnfermedad:Int) {
+    fun actualizarListadoPostEdicion(id: Int, nuevoNombre:String, nuevaEnfermedad:String) {
         val index = Datos.indexOfFirst { it.idPaciente == id }
         Datos[index].nombrePaciente = nuevoNombre
-        Datos[index].idEnfermedad = nuevaEnfermedad
+        Datos[index].nombreEnfermedad = nuevaEnfermedad
         notifyDataSetChanged()
         notifyItemRemoved(index)
     }
@@ -64,8 +64,12 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
     }
 
     fun actualizarPaciente(paciente: dataClassPacientes): Boolean {
-        val objConexion = ClaseConexion().cadenaConexion()
-        val updatePaciente = objConexion?.prepareStatement(
+        val objConexion = ClaseConexion().cadenaConexion() ?: run {
+            println("Error: La conexión a la base de datos es nula")
+            return false
+        }
+
+        val updatePaciente = objConexion.prepareStatement(
             "UPDATE Pacientes SET " +
                     "nombre_paciente = ?, " +
                     "tipo_sangre = ?, " +
@@ -77,28 +81,34 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
                     "medicamentos_asignados = ?, " +
                     "hora_medicamentos = ? " +
                     "WHERE id_paciente = ?"
-        )!!
-
-        updatePaciente.setString(1, paciente.nombrePaciente)
-        updatePaciente.setString(2, paciente.tipoSangre)
-        updatePaciente.setString(3, paciente.telefono)
-        updatePaciente.setString(4, paciente.fechaNacimiento)
-        updatePaciente.setInt(5, paciente.idHabitacion)
-        updatePaciente.setInt(6, paciente.idEnfermedad)
-        updatePaciente.setString(7, paciente.numCama)
-        updatePaciente.setString(8, paciente.medAsignados)
-        updatePaciente.setString(9, paciente.horaMed)
-        updatePaciente.setInt(10, paciente.idPaciente)
-
-        val result = updatePaciente.executeQuery()
-
-        if(result.next()) {
-            return true
-        }else {
+        ) ?: run {
+            println("Error: El PreparedStatement es nulo")
             return false
         }
 
+        try {
+            updatePaciente.setString(1, paciente.nombrePaciente)
+            updatePaciente.setString(2, paciente.tipoSangre)
+            updatePaciente.setString(3, paciente.telefono)
+            updatePaciente.setString(4, paciente.fechaNacimiento)
+            updatePaciente.setInt(5, paciente.idHabitacion)
+            updatePaciente.setInt(6, paciente.idEnfermedad)
+            updatePaciente.setString(7, paciente.numCama)
+            updatePaciente.setString(8, paciente.medAsignados)
+            updatePaciente.setString(9, paciente.horaMed)
+            updatePaciente.setInt(10, paciente.idPaciente)
+
+            val result = updatePaciente.executeQuery()
+
+            return result.next()
+        } catch (e: Exception) {
+            println("El error es $e")
+            return false
+        } finally {
+            updatePaciente.close()
+        }
     }
+
 
 
 
@@ -164,35 +174,18 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
         val tiposSangre = arrayOf("A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-")
         spSangre.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, tiposSangre)
 
-        val enfermedades = obtenerEnfermedades()
-        val habitaciones = obtenerHabitaciones()
+        // Llenar los spinners con datos
+        CoroutineScope(Dispatchers.IO).launch {
+            val enfermedades = obtenerEnfermedades()
+            val habitaciones = obtenerHabitaciones()
 
+            val nombreEnfermedad = enfermedades.map { it.nombreEnfermedad }
+            val numHabitacion = habitaciones.map { it.numHabitacion }
 
-        try {
-            CoroutineScope(Dispatchers.IO).launch {
-                val listadoResultados = obtenerEnfermedades()
-                val nombreEnfermedad = listadoResultados.map { it.nombreEnfermedad }
-                withContext(Dispatchers.Main){
-                    val miAdaptador = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, nombreEnfermedad )
-                    spEnfermedades.adapter = miAdaptador
-                }
+            withContext(Dispatchers.Main) {
+                spEnfermedades.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, nombreEnfermedad)
+                spHabitaciones.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, numHabitacion)
             }
-        }catch (e:Exception){
-            println("El error es $e")
-        }
-
-
-        try {
-            CoroutineScope(Dispatchers.IO).launch {
-                val listadoResultados = obtenerHabitaciones()
-                val numHabitacion = listadoResultados.map { it.numHabitacion }
-                withContext(Dispatchers.Main){
-                    val miAdaptador = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, numHabitacion )
-                    spHabitaciones.adapter = miAdaptador
-                }
-            }
-        }catch (e:Exception){
-            println("El error es $e")
         }
 
         txtNombre.setText(paciente.nombrePaciente)
@@ -208,40 +201,59 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
             .setTitle("Actualizar Paciente")
             .setView(dialogView)
             .setPositiveButton("Actualizar") { dialog, which ->
-
-                val nombrePaciente =  txtNombre.text.toString()
+                val nombrePaciente = txtNombre.text.toString()
                 val tipoSangre = spSangre.selectedItem.toString()
-                val idEnfermedad = enfermedades[spEnfermedades.selectedItemPosition].idEnfermedad
-                val idHabitacion = habitaciones[spHabitaciones.selectedItemPosition].idHabitacion
-                val telefono = txtTelefono.text.toString()
-                val fechaNacimiento = txtFechaNacimiento.text.toString()
-                val numCama = txtNumCama.text.toString()
-                val medAsignados = txtMedAsignadas.text.toString()
-                val horaMed = txtHora.text.toString()
 
-                val pacienteActualizado = dataClassPacientes(
-                    idPaciente = paciente.idPaciente,
-                    nombrePaciente = nombrePaciente,
-                    tipoSangre = tipoSangre,
-                    telefono = telefono,
-                    fechaNacimiento = fechaNacimiento,
-                    idHabitacion = idHabitacion,
-                    idEnfermedad = idEnfermedad,
-                    numCama = numCama,
-                    medAsignados = medAsignados,
-                    horaMed = horaMed,
-                    nombreEnfermedad = "",
-                    numHabitacion = ""
-                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    val enfermedades = obtenerEnfermedades()
+                    val habitaciones = obtenerHabitaciones()
 
-                if (actualizarPaciente(pacienteActualizado)) {
-                    notifyDataSetChanged()
-                } else {
+                    val idEnfermedad = if (enfermedades.isNotEmpty()) {
+                        enfermedades[spEnfermedades.selectedItemPosition].idEnfermedad
+                    } else {
+                        -1
+                    }
+                    val idHabitacion = if (habitaciones.isNotEmpty()) {
+                        habitaciones[spHabitaciones.selectedItemPosition].idHabitacion
+                    } else {
+                        -1
+                    }
+
+                    val telefono = txtTelefono.text.toString()
+                    val fechaNacimiento = txtFechaNacimiento.text.toString()
+                    val numCama = txtNumCama.text.toString()
+                    val medAsignados = txtMedAsignadas.text.toString()
+                    val horaMed = txtHora.text.toString()
+
+                    val pacienteActualizado = dataClassPacientes(
+                        idPaciente = paciente.idPaciente,
+                        nombrePaciente = nombrePaciente,
+                        tipoSangre = tipoSangre,
+                        telefono = telefono,
+                        fechaNacimiento = fechaNacimiento,
+                        idHabitacion = idHabitacion,
+                        idEnfermedad = idEnfermedad,
+                        numCama = numCama,
+                        medAsignados = medAsignados,
+                        horaMed = horaMed,
+                        nombreEnfermedad = paciente.nombreEnfermedad,
+                        numHabitacion = paciente.numHabitacion
+                    )
+
+                    val exito = actualizarPaciente(pacienteActualizado)
+                    withContext(Dispatchers.Main) {
+                        if (exito) {
+                            actualizarListadoPostEdicion(paciente.idPaciente, nombrePaciente, paciente.nombreEnfermedad)
+                        } else {
+                            println("Error al actualizar el paciente")
+                        }
+                    }
                 }
             }
             .setNegativeButton("Cancelar", null)
             .show()
     }
+
 
     fun obtenerHabitaciones():List<dataClassHabitaciones> {
         try {
