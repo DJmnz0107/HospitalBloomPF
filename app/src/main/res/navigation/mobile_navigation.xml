@@ -40,5 +40,10 @@
             android:id="@+id/haciaHome"
             app:destination="@id/navigation_home" />
     </fragment>
+    <fragment
+        android:id="@+id/detalle_pacientes"
+        android:name="diego.jimenez.angel.hernandez.myapplication.detalle_pacientes"
+        android:label="fragment_detalle_pacientes"
+        tools:layout="@layout/fragment_detalle_pacientes" />
 
 </navigation>

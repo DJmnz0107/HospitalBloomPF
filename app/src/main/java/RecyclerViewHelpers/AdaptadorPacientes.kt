@@ -5,16 +5,21 @@ import Modelo.dataClassEnfermedades
 import Modelo.dataClassHabitaciones
 import Modelo.dataClassPacientes
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import diego.jimenez.angel.hernandez.myapplication.MainActivity
 import diego.jimenez.angel.hernandez.myapplication.R
+import diego.jimenez.angel.hernandez.myapplication.detalle_pacientes
 import diego.jimenez.angel.hernandez.myapplication.informacion_pacientes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -156,6 +161,29 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
         holder.imgEditar.setOnClickListener {
             alertDialogActualizar(holder.itemView.context, pacientes)
 
+        }
+        holder.itemView.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("nombrePaciente", pacientes.nombrePaciente)
+                putString("tipoSangre", pacientes.tipoSangre)
+                putString("telefono", pacientes.telefono)
+                putString("fechaNacimiento", pacientes.fechaNacimiento)
+                putString("numCama", pacientes.numCama)
+                putString("medAsignados", pacientes.medAsignados)
+                putString("horaMed", pacientes.horaMed)
+                putString("nombreEnfermedad", pacientes.nombreEnfermedad)
+                putString("numHabitacion", pacientes.numHabitacion)
+            }
+
+            val fragment = detalle_pacientes().apply {
+                arguments = bundle
+            }
+
+            (holder.itemView.context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, fragment) // 'fragment_container' es el ID de tu contenedor de fragmentos en el layout
+                .addToBackStack(null)
+                .commit()
+        }
         }
 
     }
