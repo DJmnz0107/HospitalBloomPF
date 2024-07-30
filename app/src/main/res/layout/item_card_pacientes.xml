@@ -1,0 +1,58 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#313945"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/lblNombrePaciente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="8dp"
+            android:text="Nombre del Paciente"
+            android:textColor="#d2d2d2"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/lblEnfermedad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lblNombrePaciente"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="8dp"
+            android:text="Enfermedad del Paciente"
+            android:textColor="#d2d2d2"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imgEditar"
+            android:layout_width="38dp"
+            android:layout_height="34dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="Editar"
+            android:src="@drawable/update" />
+
+        <ImageView
+            android:id="@+id/imgBorrar"
+            android:layout_width="37dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/imgEditar"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:contentDescription="Borrar"
+            android:src="@drawable/delete" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

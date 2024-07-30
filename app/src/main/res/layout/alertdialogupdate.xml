@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/dialog_update_patient.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/txtNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del Paciente" />
+
+    <Spinner
+        android:id="@+id/spSangre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:spinnerMode="dropdown" />
+
+    <Spinner
+        android:id="@+id/spEnfermedades"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:spinnerMode="dropdown" />
+
+    <Spinner
+        android:id="@+id/spHabitaciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:spinnerMode="dropdown" />
+
+    <EditText
+        android:id="@+id/txtTelefonoNew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Teléfono"
+        android:inputType="phone"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/txtFechaNacimientoNew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fecha de Nacimiento"
+        android:inputType="date"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/txtNumCamaNew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Número de Cama"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/txtMedAsignadasNew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Medicamentos Asignados"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/txtHoraMedNew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Hora de Medicamentos"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

@@ -9,7 +9,15 @@
         android:id="@+id/navigation_home"
         android:name="diego.jimenez.angel.hernandez.myapplication.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/haciaInformacion"
+            app:destination="@id/informacion_pacientes" />
+
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -22,4 +30,15 @@
         android:name="diego.jimenez.angel.hernandez.myapplication.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/informacion_pacientes"
+        android:name="diego.jimenez.angel.hernandez.myapplication.informacion_pacientes"
+        android:label="fragment_informacion_pacientes"
+        tools:layout="@layout/fragment_informacion_pacientes">
+
+        <action
+            android:id="@+id/haciaHome"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
 </navigation>
