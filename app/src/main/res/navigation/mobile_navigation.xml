@@ -44,6 +44,13 @@
         android:id="@+id/detalle_pacientes"
         android:name="diego.jimenez.angel.hernandez.myapplication.detalle_pacientes"
         android:label="fragment_detalle_pacientes"
-        tools:layout="@layout/fragment_detalle_pacientes" />
+        tools:layout="@layout/fragment_detalle_pacientes">
+
+        <action
+            android:id="@+id/haciaInformacion"
+            app:destination="@id/informacion_pacientes" />
+    </fragment>
+
+
 
 </navigation>

@@ -33,6 +33,7 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
         Datos = nuevaLista
         notifyDataSetChanged()
     }
+
     fun actualizarListadoPostEdicion(id: Int, nuevoNombre: String, nuevaEnfermedad: String) {
         val index = Datos.indexOfFirst { it.idPaciente == id }
         if (index != -1) {
@@ -41,6 +42,7 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
             notifyItemChanged(index)
         }
     }
+
 
 
     fun eliminarDatos(nombrePaciente: String, position: Int) {
@@ -186,7 +188,7 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
         }
         }
 
-    }
+
 
     private fun alertDialogActualizar(context: Context, paciente: dataClassPacientes) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.alertdialogupdate, null)
@@ -286,7 +288,10 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
 
 
 
-    fun obtenerHabitaciones():List<dataClassHabitaciones> {
+
+
+
+fun obtenerHabitaciones():List<dataClassHabitaciones> {
         try {
             val objConexion = ClaseConexion().cadenaConexion()
 

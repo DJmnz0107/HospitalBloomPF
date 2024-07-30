@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
+import androidx.navigation.fragment.findNavController
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,8 +37,15 @@ class detalle_pacientes : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.haciaHome)
+
+            }
+        })
+
         val root = inflater.inflate(R.layout.fragment_detalle_pacientes, container, false)
-        // Inflate the layout for this fragment
 
         val nombrePaciente = arguments?.getString("nombrePaciente")
         val tipoSangre = arguments?.getString("tipoSangre")
@@ -48,7 +57,6 @@ class detalle_pacientes : Fragment() {
         val nombreEnfermedad = arguments?.getString("nombreEnfermedad")
         val numHabitacion = arguments?.getString("numHabitacion")
 
-        // Aquí puedes usar los datos para configurar la vista del fragmento
         root.findViewById<TextView>(R.id.lblPaciente_Nombre).text = nombrePaciente
         root.findViewById<TextView>(R.id.lblTipoSangre).text = tipoSangre
         root.findViewById<TextView>(R.id.lblTelefono).text = telefono
