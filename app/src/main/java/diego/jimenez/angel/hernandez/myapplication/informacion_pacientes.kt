@@ -32,6 +32,8 @@ class informacion_pacientes : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -83,7 +85,7 @@ class informacion_pacientes : Fragment() {
                 val numCama = resultSet.getString("Cama")
                 val medAsignados = resultSet.getString("Medicamentos")
                 val horaMed = resultSet.getString("HoraMedicamentos")
-                val nombreEnfermedad = resultSet.getString("Enfermedad")
+                nombreEnfermedad = resultSet.getString("Enfermedad")
                 val numHabitacion = resultSet.getString("NumHabitacion")
 
                 val paciente = dataClassPacientes(
@@ -138,5 +140,8 @@ class informacion_pacientes : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+        lateinit var nombreEnfermedad:String
+
     }
 }

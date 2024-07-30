@@ -15,6 +15,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import diego.jimenez.angel.hernandez.myapplication.R
+import diego.jimenez.angel.hernandez.myapplication.informacion_pacientes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -27,14 +28,15 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
         Datos = nuevaLista
         notifyDataSetChanged()
     }
-
-    fun actualizarListadoPostEdicion(id: Int, nuevoNombre:String, nuevaEnfermedad:String) {
+    fun actualizarListadoPostEdicion(id: Int, nuevoNombre: String, nuevaEnfermedad: String) {
         val index = Datos.indexOfFirst { it.idPaciente == id }
-        Datos[index].nombrePaciente = nuevoNombre
-        Datos[index].nombreEnfermedad = nuevaEnfermedad
-        notifyDataSetChanged()
-        notifyItemRemoved(index)
+        if (index != -1) {
+            Datos[index].nombrePaciente = nuevoNombre
+            Datos[index].nombreEnfermedad = nuevaEnfermedad
+            notifyItemChanged(index)
+        }
     }
+
 
     fun eliminarDatos(nombrePaciente: String, position: Int) {
 
@@ -174,7 +176,6 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
         val tiposSangre = arrayOf("A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-")
         spSangre.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, tiposSangre)
 
-        // Llenar los spinners con datos
         CoroutineScope(Dispatchers.IO).launch {
             val enfermedades = obtenerEnfermedades()
             val habitaciones = obtenerHabitaciones()
@@ -203,6 +204,7 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
             .setPositiveButton("Actualizar") { dialog, which ->
                 val nombrePaciente = txtNombre.text.toString()
                 val tipoSangre = spSangre.selectedItem.toString()
+                val nuevaEnfermedad = spEnfermedades.selectedItem.toString()
 
                 CoroutineScope(Dispatchers.IO).launch {
                     val enfermedades = obtenerEnfermedades()
@@ -236,14 +238,14 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
                         numCama = numCama,
                         medAsignados = medAsignados,
                         horaMed = horaMed,
-                        nombreEnfermedad = paciente.nombreEnfermedad,
+                        nombreEnfermedad = nuevaEnfermedad,
                         numHabitacion = paciente.numHabitacion
                     )
 
                     val exito = actualizarPaciente(pacienteActualizado)
                     withContext(Dispatchers.Main) {
                         if (exito) {
-                            actualizarListadoPostEdicion(paciente.idPaciente, nombrePaciente, paciente.nombreEnfermedad)
+                            actualizarListadoPostEdicion(paciente.idPaciente, nombrePaciente, nuevaEnfermedad)
                         } else {
                             println("Error al actualizar el paciente")
                         }
@@ -253,6 +255,7 @@ class AdaptadorPacientes(var Datos:List<dataClassPacientes>): RecyclerView.Adapt
             .setNegativeButton("Cancelar", null)
             .show()
     }
+
 
 
     fun obtenerHabitaciones():List<dataClassHabitaciones> {
